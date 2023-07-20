@@ -19,14 +19,14 @@ INSERT INTO channels (name) VALUES ('SMS');
 INSERT INTO channels (name) VALUES ('E-mail'); 	
 INSERT INTO channels (name) VALUES ('Push Notificacion'); 	
 
-/*
+
 INSERT INTO users_categories (user_id, category_id) VALUES (1,1); 	
 INSERT INTO users_categories (user_id, category_id) VALUES (1,2); 	
 INSERT INTO users_categories (user_id, category_id) VALUES (2,2); 	
 INSERT INTO users_categories (user_id, category_id) VALUES (2,3); 
 INSERT INTO users_categories (user_id, category_id) VALUES (3,1); 
 INSERT INTO users_categories (user_id, category_id) VALUES (3,3); 
-*/
+
 
 INSERT INTO users_categories (user_id, category_id) VALUES (4,1);
 INSERT INTO users_categories (user_id, category_id) VALUES (5,1);
@@ -37,14 +37,14 @@ INSERT INTO users_categories (user_id, category_id) VALUES (9,1);
 INSERT INTO users_categories (user_id, category_id) VALUES (10,1);
 INSERT INTO users_categories (user_id, category_id) VALUES (11,1);
 INSERT INTO users_categories (user_id, category_id) VALUES (12,1);
-/*
+
 INSERT INTO users_channels (user_id, channel_id) VALUES (1,1); 
 INSERT INTO users_channels (user_id, channel_id) VALUES (2,1);
 INSERT INTO users_channels (user_id, channel_id) VALUES (2,2);
 INSERT INTO users_channels (user_id, channel_id) VALUES (3,1);
 INSERT INTO users_channels (user_id, channel_id) VALUES (3,2);
 INSERT INTO users_channels (user_id, channel_id) VALUES (3,3);
-*/
+
 INSERT INTO users_channels (user_id, channel_id) VALUES (4,2);
 INSERT INTO users_channels (user_id, channel_id) VALUES (5,2);
 INSERT INTO users_channels (user_id, channel_id) VALUES (6,2);
