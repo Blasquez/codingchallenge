@@ -1,10 +1,9 @@
 package com.gila.codingchallenge.service.impl;
 
-import static java.lang.String.format;
-
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,16 +13,17 @@ import org.springframework.stereotype.Component;
 import com.gila.codingchallenge.database.CategoryRepository;
 import com.gila.codingchallenge.database.UserRepository;
 import com.gila.codingchallenge.model.Category;
-import com.gila.codingchallenge.model.Notification;
+import com.gila.codingchallenge.model.NotificationRequest;
 import com.gila.codingchallenge.model.User;
+import com.gila.codingchallenge.notifier.ChannelNotifier;
+import com.gila.codingchallenge.notifier.EmailNotifier;
+import com.gila.codingchallenge.notifier.PushNotifier;
+import com.gila.codingchallenge.notifier.SmsNotifier;
 import com.gila.codingchallenge.service.NotificationService;
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 
 @Component
-@Log4j2
 @RequiredArgsConstructor
 public class NotificationServiceImpl implements NotificationService {
 
@@ -31,11 +31,20 @@ public class NotificationServiceImpl implements NotificationService {
 	
 	private final UserRepository userRepository;
 	
+	@Autowired
+	private SmsNotifier smsNotifier;
+	
+	@Autowired
+	private EmailNotifier emailNotifier;
+	
+	@Autowired
+	private PushNotifier pushNotifier;
+	
 	@Value("${user.page.size:1}")
 	private Integer userPageSize;
 	
 	@Override
-	public void create(Notification notification) {
+	public void create(NotificationRequest notification) {
 		String categoryName = notification.getCategoryName();
 		
 		Category category = categoryRepository.findByName(categoryName)
@@ -58,34 +67,46 @@ public class NotificationServiceImpl implements NotificationService {
 		
 	}
 	
-	private void notifyUsers(List<User> users, String message, String categoryName) {
+	private void notifyUsers(List<User> users, String message, String categoryName){
 		
-		Notifier notifier = new Notifier(users, message, categoryName);
-		notifier.start();
+		List<User> smsUsers = new ArrayList<>();
 		
-	}
-	
-	@AllArgsConstructor
-	class Notifier extends Thread{
-	
-		List<User> users;		
-		String message;
-		String category;
+		List<User> emailUsers = new ArrayList<>();
 		
-		@Override
-		public void run() {
-			String logMessage = "\nDate: %s \n" +
-		            "Name: %s \n" + 
-					"Category: %s \n" +
-                    "Channel: %s \n" +
-					"Message: %s";
-			users.forEach(user -> {
-				user.getChannels().forEach(channel -> log.info(format(logMessage, LocalDateTime.now(), user.getName(), category, channel.getName(), message)));
+		List<User> pushUsers = new ArrayList<>();
+		
+		users.forEach(user -> {
+			user.getChannels().forEach(channel -> {
+				if("SMS".equalsIgnoreCase(channel.getName())) {
+					smsUsers.add(user);
+				}
+				
+				if("E-mail".equalsIgnoreCase(channel.getName())) {
+					emailUsers.add(user);
+				}
+				
+				if("Push Notificacion".equalsIgnoreCase(channel.getName())) {
+					pushUsers.add(user);
+				}
 			});
+		});
+		
+		if(!smsUsers.isEmpty()) {
+			ChannelNotifier channelNotifier = new ChannelNotifier(smsNotifier, smsUsers, message, categoryName);
+			channelNotifier.start();
 		}
 		
+		if(!emailUsers.isEmpty()) {
+			ChannelNotifier channelNotifier = new ChannelNotifier(emailNotifier, emailUsers, message, categoryName);
+			channelNotifier.start();
+		}
 		
+		if(!pushUsers.isEmpty()) {
+			ChannelNotifier smsChannelNotifier = new ChannelNotifier(pushNotifier, pushUsers, message, categoryName);
+			smsChannelNotifier.start();
+		}
 		
 	}
-
+	
+	
 }

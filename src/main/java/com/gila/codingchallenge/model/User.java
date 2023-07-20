@@ -12,7 +12,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,6 +37,10 @@ public class User implements Serializable{
 	
 	@NotBlank(message = "Name is required.")
 	private String name;
+	
+	@NotEmpty(message = "Email is required.")
+	@Email(message = "It is not a valid email.")
+	private String email;
 	
 	@NotBlank(message = "Phone is required.")
 	private String phone;

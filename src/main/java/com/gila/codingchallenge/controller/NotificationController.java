@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.gila.codingchallenge.model.Notification;
+import com.gila.codingchallenge.model.NotificationRequest;
 import com.gila.codingchallenge.service.NotificationService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +41,7 @@ public class NotificationController {
 	                       @ApiResponse(responseCode = "500", description = "Internal Server Error", content = {@Content(schema = @Schema(implementation = ResponseStatusException.class))})})
 	@PostMapping(consumes = APPLICATION_JSON_VALUE)
 	@ResponseStatus(ACCEPTED)
-	public ResponseEntity<Void> postNotification(@Valid @RequestBody final Notification notification) {
+	public ResponseEntity<Void> postNotification(@Valid @RequestBody final NotificationRequest notification) {
 		service.create(notification);
 		return ResponseEntity.accepted().build();
 	}

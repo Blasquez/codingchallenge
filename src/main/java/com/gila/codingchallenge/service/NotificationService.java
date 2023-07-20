@@ -1,8 +1,8 @@
 package com.gila.codingchallenge.service;
 
-import com.gila.codingchallenge.model.Notification;
+import com.gila.codingchallenge.model.NotificationRequest;
 
 public interface NotificationService {
 
-	void create(final Notification notification);
+	void create(final NotificationRequest notification);
 }

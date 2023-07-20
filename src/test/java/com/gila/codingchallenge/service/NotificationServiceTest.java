@@ -13,7 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.gila.codingchallenge.database.CategoryRepository;
-import com.gila.codingchallenge.model.Notification;
+import com.gila.codingchallenge.model.NotificationRequest;
 import com.gila.codingchallenge.service.impl.NotificationServiceImpl;
 
 
@@ -31,7 +31,7 @@ public class NotificationServiceTest {
 		when(categoryRepository.findByName(anyString())).thenReturn(Optional.empty());
 		
 		IllegalArgumentException exception = Assertions.assertThrows(IllegalArgumentException.class, () -> {
-			service.create(Notification.builder()
+			service.create(NotificationRequest.builder()
 					                        .categoryName("xpto")
 					                        .message("lorem ipsum")
 					                        .build());
